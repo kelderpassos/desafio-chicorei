@@ -134,7 +134,7 @@ resource "aws_route_table_association" "public" {
 
 # RDS
 resource "aws_db_subnet_group" "rds_subnet_grp" {
-  subnet_ids = ["${aws_subnet.private.id}"]
+  subnet_ids = [aws_subnet.private_1.id, aws_subnet.private_2.id]
 
   tags = {
     Name        = "${var.project_name}-private-subnet-2"
