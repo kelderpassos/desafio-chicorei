@@ -139,7 +139,7 @@ resource "aws_eip" "elastic_ip" {
   domain = "vpc"
 
   tags = {
-    Name       = "bigtrade-vpc-eip"
+    Name       = "rds-eip"
     created_at = timestamp()
   }
 }
