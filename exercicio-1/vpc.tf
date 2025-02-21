@@ -11,6 +11,7 @@ resource "aws_vpc" "main" {
   }
 }
 
+# subnet
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.public_subnet
@@ -46,7 +47,6 @@ resource "aws_subnet" "private_2" {
     created_at  = timestamp()
   }
 }
-
 
 # security group
 resource "aws_security_group" "vpc" {
@@ -102,6 +102,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_https" {
   }
 }
 
+# internet gateway e route table p/ ec2
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -131,8 +132,60 @@ resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
 }
 
+# nat gateway e elastic ip p/ rds
+resource "aws_eip" "elastic_ip" {
+  depends_on = [aws_vpc.main, aws_internet_gateway.igw]
 
-# RDS
+  domain = "vpc"
+
+  tags = {
+    Name = "bigtrade-vpc-eip"
+    created_at = timestamp()
+  }
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id = aws_instance.wordpress.id
+  allocation_id = aws_eip.elastic_ip.id
+}
+
+
+resource "aws_nat_gateway" "rds_nat" {
+  allocation_id = aws_eip.elastic_ip.id
+  subnet_id     = aws_subnet.public.id
+
+  tags = {
+    Name       = "${var.project_name}-nat-gateway"
+    created_at = timestamp()
+  }
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.rds_nat.id
+  }
+
+  tags = {
+    Name       = "${var.project_name}-private-rt"
+    rt_type    = "private"
+    created_at = timestamp()
+  }
+}
+
+resource "aws_route_table_association" "private_1" {
+  route_table_id = aws_route_table.private.id
+  subnet_id      = aws_subnet.private_1.id
+}
+
+resource "aws_route_table_association" "private_2" {
+  route_table_id = aws_route_table.private.id
+  subnet_id      = aws_subnet.private_2.id
+}
+
+# rds
 resource "aws_db_subnet_group" "rds_subnet_grp" {
   subnet_ids = [aws_subnet.private_1.id, aws_subnet.private_2.id]
 
