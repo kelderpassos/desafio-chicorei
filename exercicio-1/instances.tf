@@ -17,12 +17,12 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_iam_role.name
 }
 
-resource "aws_instance" "ec2_instance" {
-  depends_on = [aws_db_instance.rds_instance]
+resource "aws_instance" "ec2" {
+  depends_on = [aws_db_instance.rds]
 
   ami                         = var.ami
   instance_type               = var.ec2_instance_type
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = ["${aws_security_group.ec2_sg.id}"]
   associate_public_ip_address = true
@@ -35,7 +35,7 @@ resource "aws_instance" "ec2_instance" {
   }
 }
 
-resource "aws_db_instance" "rds_instance" {
+resource "aws_db_instance" "rds" {
   allocated_storage      = 10
   max_allocated_storage  = 20
   storage_type           = "gp2"
