@@ -134,7 +134,7 @@ resource "aws_route_table_association" "public" {
 
 # nat gateway e elastic ip p/ rds
 resource "aws_eip" "elastic_ip" {
-  depends_on = [aws_vpc.main, aws_internet_gateway.igw]
+  depends_on = [ aws_internet_gateway.igw ]
 
   domain = "vpc"
 
@@ -144,13 +144,9 @@ resource "aws_eip" "elastic_ip" {
   }
 }
 
-resource "aws_eip_association" "eip_assoc" {
-  instance_id = aws_instance.wordpress.id
-  allocation_id = aws_eip.elastic_ip.id
-}
-
-
 resource "aws_nat_gateway" "rds_nat" {
+  depends_on = [ aws_internet_gateway.igw ]
+
   allocation_id = aws_eip.elastic_ip.id
   subnet_id     = aws_subnet.public.id
 
