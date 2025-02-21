@@ -6,15 +6,16 @@ terraform {
     }
   }
 
-  backend "s3" {
-    key            = "exercicio-1/terraform.tfstate"
-    encrypt        = true
-    region         = "us-east-1"
-    dynamodb_table = "dynamodb-state-locking"
-  }
+  backend "s3" {}
 }
 
 provider "aws" {
   region  = var.region
   profile = var.aws_profile
+}
+
+locals {
+  account_id = data.aws_caller_identity.this.account_id
+  az1        = data.aws_availability_zones.azs.names[0]
+  az2        = data.aws_availability_zones.azs.names[1]
 }
