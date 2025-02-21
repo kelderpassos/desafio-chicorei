@@ -13,7 +13,7 @@ resource "aws_key_pair" "terraform_key" {
 }
 
 resource "aws_instance" "ec2_instance" {
-  depends_on = [ aws_db_instance.wordpress_db ]
+  depends_on = [ aws_db_instance.rds_instance ]
 
   ami = var.ami
   instance_type = var.ec2_instance_type
@@ -31,6 +31,7 @@ resource "aws_instance" "ec2_instance" {
 
 resource "aws_db_instance" "rds_instance" {
   allocated_storage    = 10
+  max_allocated_storage = 20
   storage_type         = "gp2"
   engine               = "mysql"
   engine_version       = "8.0"
