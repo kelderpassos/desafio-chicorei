@@ -10,12 +10,13 @@ resource "aws_s3_bucket_policy" "ec2_bucket_policy" {
     Statement = [
       {
         Principal = {
-          Service = "ec2.amazonaws.com"
+          "AWS" = "${aws_iam_role.ec2_iam_role.arn}"
         },
         Action = [
-          "s3:*",
-        ]
-        Effect = "Allow"
+          "s3:GetObject",
+          "s3:ListBucket"
+        ],
+        Effect = "Allow",
         Resource = [
           "arn:aws:s3:::${aws_s3_bucket.ec2_bucket.id}",
           "arn:aws:s3:::${aws_s3_bucket.ec2_bucket.id}/*"
