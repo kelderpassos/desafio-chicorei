@@ -82,7 +82,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_https" {
   ip_protocol = "tcp"
   cidr_ipv4 = "0.0.0.0/0"
   from_port = 443
-  to_port = 433
+  to_port = 443
 
   tags = {
     Name = "${var.project_name}-allow_all"
@@ -114,9 +114,9 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "public_1" {
+resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
-  subnet_id = aws_subnet.public_1.id
+  subnet_id = aws_subnet.public.id
 }
 
 
