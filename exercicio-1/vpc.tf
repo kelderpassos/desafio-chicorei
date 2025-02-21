@@ -91,8 +91,8 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 resource "aws_vpc_security_group_egress_rule" "allow_https" {
   security_group_id = aws_security_group.ec2_sg.id
   description       = "Habilita todo trafego de saida"
-  ip_protocol = "-1"  # Permitir todo tráfego de saída
-  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 443
   to_port           = 443
 
@@ -134,18 +134,18 @@ resource "aws_route_table_association" "public" {
 
 # nat gateway e elastic ip p/ rds
 resource "aws_eip" "elastic_ip" {
-  depends_on = [ aws_internet_gateway.igw ]
+  depends_on = [aws_internet_gateway.igw]
 
   domain = "vpc"
 
   tags = {
-    Name = "bigtrade-vpc-eip"
+    Name       = "bigtrade-vpc-eip"
     created_at = timestamp()
   }
 }
 
 resource "aws_nat_gateway" "rds_nat" {
-  depends_on = [ aws_internet_gateway.igw ]
+  depends_on = [aws_internet_gateway.igw]
 
   allocation_id = aws_eip.elastic_ip.id
   subnet_id     = aws_subnet.public.id
@@ -160,7 +160,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.rds_nat.id
   }
 
@@ -204,12 +204,12 @@ resource "aws_security_group" "rds_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "rds_ingress_rule" {
-  security_group_id = aws_security_group.rds_sg.id
-  description       = "Habilita trafego de entrada p/ RDS"
-  ip_protocol       = "tcp"
+  security_group_id            = aws_security_group.rds_sg.id
+  description                  = "Habilita trafego de entrada p/ RDS"
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.ec2_sg.id
-  from_port         = 3306
-  to_port           = 3306
+  from_port                    = 3306
+  to_port                      = 3306
 }
 
 resource "aws_vpc_security_group_egress_rule" "rds_egress" {

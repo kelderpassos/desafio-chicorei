@@ -19,7 +19,7 @@ resource "aws_s3_bucket_policy" "ec2_bucket_policy" {
         Resource = [
           "arn:aws:s3:::${aws_s3_bucket.ec2_bucket.id}",
           "arn:aws:s3:::${aws_s3_bucket.ec2_bucket.id}/*"
-]
+        ]
       },
     ]
   })
