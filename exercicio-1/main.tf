@@ -20,8 +20,8 @@ locals {
   az2        = data.aws_availability_zones.azs.names[1]
 
   secrets = {
-    db_name = jsondecode(data.aws_secretsmanager_secret_version.wordpress-secrets.secret_string)["DATABASE_NAME"]
-    db_username = jsondecode(data.aws_secretsmanager_secret_version.wordpress-secrets.secret_string)["DATABASE_USERNAME"]
-    db_password = jsondecode(data.aws_secretsmanager_secret_version.wordpress-secrets.secret_string)["DATABASE_PASSWORD"]
+    db_name = jsondecode(data.aws_secretsmanager_secret_version.rds-secrets.secret_string)["DATABASE_NAME"]
+    db_username = jsondecode(data.aws_secretsmanager_secret_version.rds-secrets.secret_string)["DATABASE_USERNAME"]
+    db_password = jsondecode(data.aws_secretsmanager_secret_version.rds-secrets.secret_string)["DATABASE_PASSWORD"]
   }
 }
