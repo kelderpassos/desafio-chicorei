@@ -11,7 +11,7 @@ resource "aws_vpc" "main" {
   }
 }
 
-# subnet
+# ec2
 resource "aws_subnet" "public" {
   vpc_id = aws_vpc.main.id
   cidr_block = var.public_subnet
@@ -88,6 +88,35 @@ resource "aws_vpc_security_group_egress_rule" "allow_https" {
     Name = "${var.project_name}-allow_all"
     created_at = timestamp()
   }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.project_name}-igw"
+    created_at = timestamp()
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "${var.project_name}-public-rt"
+    rt_type = "public"
+    created_at = timestamp()
+  }
+}
+
+resource "aws_route_table_association" "public_1" {
+  route_table_id = aws_route_table.public.id
+  subnet_id = aws_subnet.public_1.id
 }
 
 
