@@ -48,7 +48,7 @@ resource "aws_subnet" "private_2" {
   }
 }
 
-# security group
+# security group p/ ec2
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2-vpc-sg"
   vpc_id      = aws_vpc.main.id
@@ -91,8 +91,8 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 resource "aws_vpc_security_group_egress_rule" "allow_https" {
   security_group_id = aws_security_group.ec2_sg.id
   description       = "Habilita todo trafego de saida"
-  ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol = "-1"  # Permitir todo tráfego de saída
+  cidr_ipv4   = "0.0.0.0/0"
   from_port         = 443
   to_port           = 443
 
@@ -211,7 +211,7 @@ resource "aws_vpc_security_group_ingress_rule" "rds_ingress_rule" {
   security_group_id = aws_security_group.rds_sg.id
   description       = "Habilita trafego de entrada p/ RDS"
   ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
+  referenced_security_group_id = aws_security_group.ec2_sg.id
   from_port         = 3306
   to_port           = 3306
 }
