@@ -42,26 +42,26 @@ resource "aws_subnet" "private_2" {
   availability_zone = local.az2
 
   tags = {
-    Name        = "${var.project_name}-private-subnet-1"
+    Name        = "${var.project_name}-private-subnet-2"
     subnet_type = "private"
     created_at  = timestamp()
   }
 }
 
 # security group
-resource "aws_security_group" "vpc" {
-  name        = "main_vpc_security_group"
+resource "aws_security_group" "ec2_sg" {
+  name        = "ec2-vpc-sg"
   vpc_id      = aws_vpc.main.id
-  description = "Habilita trafego de entrada e saida para a VPC"
+  description = "Security Group para EC2"
 
   tags = {
-    Name       = "${var.project_name}-sg"
+    Name       = "${var.project_name}-sg-ec2"
     created_at = timestamp()
   }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
-  security_group_id = aws_security_group.vpc.id
+  security_group_id = aws_security_group.ec2_sg.id
   description       = "Habilita trafego de entrada SSH"
   ip_protocol       = "tcp"
   cidr_ipv4         = var.allowed_ssh_ip # apenas minha máquina acessa a instância
@@ -75,7 +75,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_https" {
-  security_group_id = aws_security_group.vpc.id
+  security_group_id = aws_security_group.ec2_sg.id
   description       = "Habilita trafego de entrada HTTPS"
   ip_protocol       = "tcp"
   cidr_ipv4         = "0.0.0.0/0"
@@ -89,7 +89,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "allow_https" {
-  security_group_id = aws_security_group.vpc.id
+  security_group_id = aws_security_group.ec2_sg.id
   description       = "Habilita todo trafego de saida"
   ip_protocol       = "tcp"
   cidr_ipv4         = "0.0.0.0/0"
