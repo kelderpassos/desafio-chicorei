@@ -1,0 +1,23 @@
+# projeto
+aws_profile  = 
+environment  = 
+project_name = 
+region       = 
+
+# alb
+domain_name = 
+
+# ec2
+ami               = 
+ec2_instance_type = 
+key_name          = 
+rds_instance_type = 
+
+# s3
+bucket_name = 
+
+# vpc
+allowed_ssh_ip = 
+private_subnet = 
+public_subnet  = 
+vpc_cidr       = 
