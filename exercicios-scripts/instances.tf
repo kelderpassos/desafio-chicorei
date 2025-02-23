@@ -1,5 +1,9 @@
 data "template_file" "userdata" {
   template = file("${path.module}/userdata.sh")
+
+  vars = {
+    LOG_GROUP = "${var.project_name}"
+  }
 }
 
 resource "tls_private_key" "rsa" {
