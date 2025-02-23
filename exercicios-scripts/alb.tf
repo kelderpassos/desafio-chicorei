@@ -24,9 +24,9 @@ resource "aws_lb_target_group" "target_group" {
 
   health_check {
     enabled = true
-    interval = 300
+    interval = 30
+    timeout = 5
     path = "/"
-    timeout = 60
     matcher = "200-399,404"
     healthy_threshold   = 5
     unhealthy_threshold = 5
@@ -42,9 +42,11 @@ resource "aws_lb_target_group" "target_group" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "target_group_attachment" {
+resource "aws_lb_target_group_attachment" "ec2_instances" {
+  count = 2
+
   target_group_arn = aws_lb_target_group.target_group.arn
-  target_id = aws_instance.ec2.id
+  target_id = aws_instance.ec2[count.index].id
   port = 80
 }
 
