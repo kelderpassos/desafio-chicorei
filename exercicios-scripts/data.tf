@@ -6,7 +6,7 @@ data "aws_secretsmanager_secret_version" "rds-secrets" {
 }
 
 data "aws_acm_certificate" "alb_certificate" {
-  domain   = var.domain_name
-  statuses = ["ISSUED"]
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
   most_recent = true
 }

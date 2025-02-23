@@ -22,7 +22,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 }
 
 resource "aws_instance" "ec2" {
-  count = 2
+  count      = 2
   depends_on = [aws_db_instance.rds]
 
   ami                         = var.ami
