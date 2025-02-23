@@ -1,16 +1,25 @@
-# Exercício 1
+# Exercício 1, 2 e 4
 
-### Descrição
-Crie uma configuração básica utilizando o uma ferramenta de IaC para provisionar uma instância EC2 com RDS (MySQL) e S3 dentro da AWS. Providencie políticas básicas de segurança para acessar a instância.
+## Exercício 1 - Infraestrutura AWS
+Crie uma configuração básica utilizando o uma ferramenta de IaC para provisionar uma instância EC2 com RDS (MySQL), S3 e CloudWatch log group dentro da AWS. Providencie políticas básicas de segurança para acessar a instância.
+
+## Exercício 2 - Infraestrutura como Código (IaC)
+Utilize uma ferramenta de IaC para criar um load balancer na AWS que distribui o tráfego entre duas instâncias EC2. Explique o processo e as decisões de configuração no README. Explique porque escolheu a ferramenta de IaC usada.
+
+## Exercício 4 - Monitoramento e Logging
+Configure uma solução de monitoramento para uma instância EC2 utilizando AWS CloudWatch. Colete métricas básicas (CPU, memória) e registre logs da aplicação simulada.
+
 
 ### Resultado
 O projeto foi desenvolvido em Terraform e conta com scripts em arquivos referentes às configurações pedidas.
 
 No arquivo main.tf há a configuração global deste projeto, onde está configurado o provedor (AWS), back-end, variáveis locais,
 
-O arquivo instances.tf contém o script necessário para a criação das instâncias EC2 e RDS, que conta com userdata.sh (configurar o EC2 com MySQL) e função (Role) a ser assumida pela instância.
+O arquivo instances.tf contém o script necessário para a criação do RDS e das instâncias EC2, que conta com userdata.sh (atualiza o SO e instala e configura o CloudWatch Agent) e função (Role) a ser assumida pela instância. Para garantir que as instâncias EC2 tenham seu tráfego distribuído igualmente e que este seja criptografado em trânsito com o protocolo SSL/TLS, no arquivo alb.tf há a configuração de um application load balancer para isso.
 
-A configuração de acesso da instância está no arquivo iam.tf que tem definido a política de acesso ao bucket S3, a função que recebe a política e que serviço assumirá a função (Assume Role).
+A configuração de acesso da instância está no arquivo iam.tf que tem definido uma política de acesso ao bucket S3, uma política de permissões ao CloudWatch Agent, a função que recebe as políticas e que serviço assumirá a função (Assume Role).
+
+O arquivo cloudwatch.tf cria o grupo de logs (log group) que receberá as métricas de CPU, memória, disco e rede do CloudWatch Agent ativo e configurado no EC2.
 
 O bucket S3 por sua vez está no arquivo s3.tf que o cria e define que somente o EC2 com a função específica criada acima pode acessar o bucket.
 
