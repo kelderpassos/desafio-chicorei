@@ -1,5 +1,9 @@
 data "template_file" "userdata" {
   template = file("${path.module}/userdata.sh")
+
+  vars = {
+    LOG_GROUP = "${var.project_name}"
+  }
 }
 
 resource "tls_private_key" "rsa" {
@@ -18,6 +22,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 }
 
 resource "aws_instance" "ec2" {
+  count      = 2
   depends_on = [aws_db_instance.rds]
 
   ami                         = var.ami
@@ -30,7 +35,7 @@ resource "aws_instance" "ec2" {
   key_name                    = aws_key_pair.terraform_key
 
   tags = {
-    Name       = "${var.project_name}-instance"
+    Name       = "${var.project_name}-instance-${count.index + 1}"
     created_at = timestamp()
   }
 }

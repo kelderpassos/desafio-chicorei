@@ -5,6 +5,9 @@ variable "project_name" {}
 variable "rds_secrets" {}
 variable "region" {}
 
+# alb
+variable "domain_name" {}
+
 # instances
 variable "ami" {}
 variable "ec2_instance_type" {}
