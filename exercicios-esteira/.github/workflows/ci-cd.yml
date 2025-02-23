@@ -1,0 +1,31 @@
+name: Integração e Entrega Contínua 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clona repositorio
+        uses: actions/checkout@v4
+
+      - name: Compila projeto
+        run: npm run build
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instala dependencies
+        run: npm i
+
+      - name: Executa cobertura de testes
+        run: npm run test:coverage

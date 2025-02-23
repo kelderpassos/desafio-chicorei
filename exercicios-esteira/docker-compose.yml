@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  frontend:
+    platform: linux/x86_64
+    container_name: cashforce-frontend
+    build: ./front-end
+    working_dir: /app
+    ports:
+      - 3000:3000
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:5173"]
+      timeout: 10s
+      retries: 5
+    networks:
+      - cashforce-app
+
+  backend:
+    platform: linux/x86_64
+    container_name: cashforce-backend
+    build: ./back-end
+    working_dir: /api
+    environment:
+      - DB_USERNAME=root
+      - DB_PASSWORD=admin
+      - DB_HOST=database
+      - DB_NAME=cashforce_v3
+      - DB_PORT=3306
+      - API_PORT=3333
+    ports:
+      - 3333:3333
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3333"]
+      timeout: 10s
+      retries: 5
+    networks:
+      - cashforce-app
+      - cashforce-db
+
+  database:
+    image: mysql:8.0.31
+    container_name: cashforce-db
+    platform: linux/x86_64
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    restart:
+      always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
+    networks:
+      - cashforce-db
+
+networks:
+  cashforce-app: {}
+  cashforce-db: {}
