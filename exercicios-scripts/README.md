@@ -33,3 +33,10 @@ Por fim, nos arquivos data.tf, variables.tf e outputs.tf respectivamente há:
 - data resources para serem usados globalmente;
 - variáveis de projeto configuradas no arquivo terraform.tfvars
 - saídas dos recursos instanciados pelo script 
+
+### Instalação
+Rode `terraform init -backend-config='./backend/prd.hcl'`. É importante que as credenciais [default] no arquvivo credentials estejam atualizadas.
+
+Depois rode `terraform plan` para verificar que alterações serão feitas. Neste momento é importante verificar se os valores do arquivo terraform.tfvars existem e estão corretos. Deixei um arquivo terraform.tfvars.example para demonstrar quais variáveis serão necessárias.
+
+Após a validação, rode `terraform apply` para aplicar as alterações e subir os serviços.
