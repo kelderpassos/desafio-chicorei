@@ -11,9 +11,13 @@ Configure uma solução de monitoramento para uma instância EC2 utilizando AWS 
 
 
 ### Resultado
-O projeto foi desenvolvido em Terraform e conta com scripts em arquivos referentes às configurações pedidas.
+O projeto foi desenvolvido em Terraform e conta com scripts em arquivos referentes às configurações pedidas. A escolha por Terraform se deu devido aos seguintes fatores:
 
-No arquivo main.tf há a configuração global deste projeto, onde está configurado o provedor (AWS), back-end, variáveis locais,
+- É a tecnologia de IaC mais amplamente adotada no mercado devido a sua robustez e versatilidade. Com isso, o nível de suporte e conteúdo a respeito dela é gigante.
+- Terraform realiza chamadas de API para a AWS enquanto que o CloudFormation, um IaC nativo da AWS, utiliza processos internos para instanciar a infra. O processamento via chamadas de API é muito mais rápido, portanto, Terraform cria e destroi serviços numa velocidade maior que o CloudFormation.
+- O gerenciamento de estado no Terraform é superior no meu entender ao do CloudFormation, de modo que você consegue depurar erros mais facilmente (quem já lidou com rollback do CloudFormation entende isso).
+
+Sobre os scripts, no arquivo main.tf há a configuração global deste projeto, onde está configurado o provedor (AWS), back-end, variáveis locais,
 
 O arquivo instances.tf contém o script necessário para a criação do RDS e das instâncias EC2, que conta com userdata.sh (atualiza o SO e instala e configura o CloudWatch Agent) e função (Role) a ser assumida pela instância. Para garantir que as instâncias EC2 tenham seu tráfego distribuído igualmente e que este seja criptografado em trânsito com o protocolo SSL/TLS, no arquivo alb.tf há a configuração de um application load balancer para isso.
 
