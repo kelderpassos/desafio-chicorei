@@ -1,4 +1,4 @@
-# Exercício 1, 2 e 4
+# Exercícios 1, 2 e 4
 
 ## Exercício 1 - Infraestrutura AWS
 Crie uma configuração básica utilizando o uma ferramenta de IaC para provisionar uma instância EC2 com RDS (MySQL), S3 e CloudWatch log group dentro da AWS. Providencie políticas básicas de segurança para acessar a instância.
