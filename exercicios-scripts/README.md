@@ -35,7 +35,7 @@ Por fim, nos arquivos data.tf, variables.tf e outputs.tf respectivamente há:
 - saídas dos recursos instanciados pelo script 
 
 ### Instalação
-Rode `terraform init -backend-config='./backend/prd.hcl'`. É importante que as credenciais [default] no arquvivo credentials estejam atualizadas.
+Rode `terraform init -backend-config='./backend/dev.hcl'`. É importante que as credenciais [default] no arquvivo credentials estejam atualizadas.
 
 Depois rode `terraform plan` para verificar que alterações serão feitas. Neste momento é importante verificar se os valores do arquivo terraform.tfvars existem e estão corretos. Deixei um arquivo terraform.tfvars.example para demonstrar quais variáveis serão necessárias.
 
